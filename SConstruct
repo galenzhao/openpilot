@@ -293,7 +293,66 @@ SConscript(['common/kalman/SConscript'])
 SConscript(['common/transformations/SConscript'])
 SConscript(['phonelibs/SConscript'])
 
+env14 = env
+
+env = Environment(
+  ENV=lenv,
+  CCFLAGS=[
+    "-g",
+    "-fPIC",
+    "-O2",
+    "-Wunused",
+    "-Werror",
+    "-Wno-deprecated-register",
+    "-Wno-inconsistent-missing-override",
+  ] + cflags + ccflags_asan,
+
+  CPPPATH=cpppath + [
+    "#",
+    "#selfdrive",
+    "#phonelibs/bzip2",
+    "#phonelibs/libyuv/include",
+    "#phonelibs/openmax/include",
+    "#phonelibs/json11",
+    "#phonelibs/curl/include",
+    #"#phonelibs/opencv/include", # use opencv4 instead
+    "#phonelibs/libgralloc/include",
+    "#phonelibs/android_frameworks_native/include",
+    "#phonelibs/android_hardware_libhardware/include",
+    "#phonelibs/android_system_core/include",
+    "#phonelibs/linux/include",
+    "#phonelibs/snpe/include",
+    "#phonelibs/nanovg",
+    "#selfdrive/common",
+    "#selfdrive/camerad",
+    "#selfdrive/camerad/include",
+    "#selfdrive/loggerd/include",
+    "#selfdrive/modeld",
+    "#selfdrive/sensord",
+    "#selfdrive/ui",
+    "#cereal/messaging",
+    "#cereal",
+    "#opendbc/can",
+  ],
+
+  CC='clang',
+  CXX='clang++',
+  LINKFLAGS=ldflags_asan,
+
+  RPATH=rpath,
+
+  CFLAGS=["-std=gnu11"] + cflags,
+  CXXFLAGS=["-std=c++11"] + cxxflags,        
+  # CXXFLAGS=["-std=c++14"] + cxxflags,
+  LIBPATH=libpath + [
+    "#cereal",
+    "#selfdrive/common",
+    "#phonelibs",
+  ]
+)
 SConscript(['selfdrive/camerad/SConscript'])
+
+env = env14
 SConscript(['selfdrive/modeld/SConscript'])
 
 SConscript(['selfdrive/controls/lib/cluster/SConscript'])
