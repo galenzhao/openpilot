@@ -49,6 +49,13 @@ sudo apt-get update && sudo apt-get install -y \
     wget \
     gcc-arm-none-eabi
 
+# install pyenv lib
+sudo apt-get install aptitude
+sudo aptitude install libreadline-dev
+
+# change dns for github
+sudo vim /etc/resolv.conf
+
 # install git lfs
 if ! command -v "git-lfs" > /dev/null 2>&1; then
   curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
@@ -78,7 +85,7 @@ git submodule init
 git submodule update
 
 # install python 3.8.2 globally (you should move to python3 anyway)
-pyenv install -s 3.8.2
+env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install -s 3.8.2
 pyenv global 3.8.2
 pyenv rehash
 
@@ -86,6 +93,9 @@ pyenv rehash
 
 # install pipenv
 pip install pipenv==2018.11.26
+
+# upgrade pip for opencv-py
+pip install --upgrade pip
 
 # pipenv setup (in openpilot dir)
 pipenv install --dev --system --deploy
