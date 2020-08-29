@@ -53,6 +53,12 @@ sudo apt-get update && sudo apt-get install -y \
 sudo apt-get install aptitude
 sudo aptitude install libreadline-dev
 
+# install opencv
+sudo apt-get install build-essential cmake unzip pkg-config libjpeg-dev libpng-dev libtiff-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev libatlas-base-dev gfortran
+
+# install opencl
+sudo apt-get install lsb-core
+
 # change dns for github
 sudo vim /etc/resolv.conf
 
@@ -103,6 +109,7 @@ pip install --upgrade pip
 
 # pipenv setup (in openpilot dir)
 pipenv install --dev --system --deploy
+pip install numpy
 
 # for loggerd to work on ubuntu
 # TODO: PC should log somewhere else
