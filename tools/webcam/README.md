@@ -27,6 +27,11 @@ cd ~/openpilot
 ```
 - check out selfdrive/camerad/cameras/camera_webcam.cc lines 72 and 146 before building if any camera is upside down
 ```
+cmake -D CMAKE_BUILD_TYPE=RELEASE     -D CMAKE_INSTALL_PREFIX=/usr/local     -D INSTALL_PYTHON_EXAMPLES=OFF     -D INSTALL_C_EXAMPLES=OFF     -D OPENCV_ENABLE_NONFREE=ON     -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib-4.3.0/modules -D BUILD_EXAMPLES=OFF .. \
+-DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")  \
+-DPYTHON_LIBRARY=$(python -c "import distutils.sysconfig as sysconfig; print(sysconfig.get_config_var('LIBDIR'))") \
+-DPYTHON_EXECUTABLE:FILEPATH=`which python`
+
 scons use_webcam=1
 touch prebuilt
 ```
