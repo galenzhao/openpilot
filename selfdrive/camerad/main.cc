@@ -1,3 +1,5 @@
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+
 #include <stdio.h>
 #include <signal.h>
 #include <cassert>

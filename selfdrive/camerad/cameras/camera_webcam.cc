@@ -33,7 +33,7 @@ void camera_close(CameraState *s) {
 }
 
 void camera_release_buffer(void *cookie, int buf_idx) {
-  CameraState *s = static_cast<CameraState *>(cookie);
+  //CameraState *s = static_cast<CameraState *>(cookie);
 }
 
 void camera_init(CameraState *s, int camera_id, unsigned int fps) {
@@ -53,7 +53,7 @@ static void* rear_thread(void *arg) {
   set_thread_name("webcam_rear_thread");
   CameraState* s = (CameraState*)arg;
 
-  cv::VideoCapture cap_rear(1); // road
+  cv::VideoCapture cap_rear(0); // road
   cap_rear.set(cv::CAP_PROP_FRAME_WIDTH, 853);
   cap_rear.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
   cap_rear.set(cv::CAP_PROP_FPS, s->fps);
@@ -245,7 +245,7 @@ void cameras_open(MultiCameraState *s, VisionBuf *camera_bufs_rear,
                   VisionBuf *camera_bufs_front) {
   assert(camera_bufs_rear);
   assert(camera_bufs_front);
-  int err;
+  //int err;
 
   // LOG("*** open front ***");
   camera_open(&s->front, camera_bufs_front, false);

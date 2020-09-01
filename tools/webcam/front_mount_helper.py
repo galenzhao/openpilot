@@ -15,7 +15,7 @@ webcam_intrinsics = np.array([
   [  0.,  webcam_focal_length,  720/2.],
   [  0.,    0.,     1.]])
 
-cam_id = 2
+cam_id = 0
 
 if __name__ == "__main__":
   import cv2  # pylint: disable=import-error
@@ -23,8 +23,8 @@ if __name__ == "__main__":
   trans_webcam_to_eon_front = np.dot(eon_dcam_intrinsics, np.linalg.inv(webcam_intrinsics))
 
   cap = cv2.VideoCapture(cam_id)
-  cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-  cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+  #cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+  #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
   while (True):
     ret, img = cap.read()
