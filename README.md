@@ -1,3 +1,7 @@
+auto merge
+
+https://github.com/galenzhao/openpilot/compare/master...commaai:master
+
 [![](https://i.imgur.com/UelUjKAh.png)](#)
 
 Table of Contents
