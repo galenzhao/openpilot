@@ -27,8 +27,9 @@ if __name__ == "__main__":
   #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
   while (True):
-    ret, img = cap.read()
+    ret, image = cap.read()
     if ret:
+      img = cv2.resize(image, (1280, 720)) 
       img = cv2.warpPerspective(img, trans_webcam_to_eon_front, (1152, 864), borderMode=cv2.BORDER_CONSTANT, borderValue=0)
       img = img[:, -864//2:, :]
       cv2.imshow('preview', img)

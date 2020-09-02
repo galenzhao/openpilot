@@ -83,10 +83,12 @@ static void* rear_thread(void *arg) {
   TBuffer* tb = &s->camera_tb;
 
   while (!do_exit) {
-    cv::Mat frame_mat;
+    cv::Mat frame_mat1;
     cv::Mat transformed_mat;
-
-    cap_rear >> frame_mat;
+    // force resize to fit
+    cap_rear >> frame_mat1;
+    cv::Mat frame_mat;
+    cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
 
     // int rows = frame_mat.rows;
     // int cols = frame_mat.cols;
@@ -157,10 +159,12 @@ void front_thread(CameraState *s) {
   TBuffer* tb = &s->camera_tb;
 
   while (!do_exit) {
-    cv::Mat frame_mat;
+    cv::Mat frame_mat1;
     cv::Mat transformed_mat;
 
-    cap_front >> frame_mat;
+    cap_front >> frame_mat1;
+    cv::Mat frame_mat;
+    cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
 
     // int rows = frame_mat.rows;
     // int cols = frame_mat.cols;
