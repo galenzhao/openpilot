@@ -1049,7 +1049,7 @@ void* visionserver_client_thread(void* arg) {
         vipc_send(fd, &rep);
         streams[stream_type].subscribed = true;
       } else if (p.type == VIPC_STREAM_RELEASE) {
-        // printf("client release f %d  %d\n", p.d.stream_rel.type, p.d.stream_rel.idx);
+        printf("client release f %d  %d\n", p.d.stream_rel.type, p.d.stream_rel.idx);
         int si = p.d.stream_rel.type;
         assert(si < VISION_STREAM_MAX);
         if (streams[si].tb) {

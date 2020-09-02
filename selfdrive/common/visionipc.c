@@ -46,8 +46,9 @@ int vipc_send(int fd, const VisionPacket *p2) {
     .type = p2->type,
     .d = p2->d,
   };
-  int ret = ipc_sendrecv_with_fds(true, fd, (void*)&p, sizeof(p), (int*)p2->fds, p2->num_fds, NULL);
-  //printf("%d = vipc_send(%d, %d): %d %d %d %zu\n", ret, fd, p2->num_fds, p2->d.stream_bufs.type, p2->d.stream_bufs.width, p2->d.stream_bufs.height, p2->d.stream_bufs.buf_len);
+  int ret = 0;
+  printf("%d = vipc_send(%d, %d): %d %d %d %zu\n", ret, fd, p2->num_fds, p2->d.stream_bufs.type, p2->d.stream_bufs.width, p2->d.stream_bufs.height, p2->d.stream_bufs.buf_len);
+  ret = ipc_sendrecv_with_fds(true, fd, (void*)&p, sizeof(p), (int*)p2->fds, p2->num_fds, NULL);
   return ret;
 }
 
