@@ -37,6 +37,9 @@ typedef struct CameraState {
   float cur_gain_frac;
 
   mat3 transform;
+
+  // add webcam index id
+  //int idx;
 } CameraState;
 
 

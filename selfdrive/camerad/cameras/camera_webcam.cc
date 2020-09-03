@@ -52,8 +52,8 @@ static void* rear_thread(void *arg) {
 
   set_thread_name("webcam_rear_thread");
   CameraState* s = (CameraState*)arg;
-
-  cv::VideoCapture cap_rear(1); // road
+  int idx = s->idx;
+  cv::VideoCapture cap_rear(idx==-1?1:idx); // road
   cap_rear.set(cv::CAP_PROP_FRAME_WIDTH, 853);
   cap_rear.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
   cap_rear.set(cv::CAP_PROP_FPS, s->fps);
@@ -87,6 +87,9 @@ static void* rear_thread(void *arg) {
     cv::Mat transformed_mat;
     // force resize to fit
     cap_rear >> frame_mat1;
+    if(frame_mat1.size().empty()){
+      continue;
+    }
     cv::Mat frame_mat;
     cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
 
@@ -130,8 +133,9 @@ static void* rear_thread(void *arg) {
 
 void front_thread(CameraState *s) {
   int err;
+  int idx = s->idx;
 
-  cv::VideoCapture cap_front(0); // driver
+  cv::VideoCapture cap_front(idx==-1?0:idx); // driver
   //cap_front.set(cv::CAP_PROP_FRAME_WIDTH, 853);
   //cap_front.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
   cap_front.set(cv::CAP_PROP_FPS, s->fps);
@@ -164,6 +168,9 @@ void front_thread(CameraState *s) {
 
     cap_front >> frame_mat1;
     cv::Mat frame_mat;
+    if(frame_mat1.size().empty()){
+      continue;
+    }
     cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
 
     // int rows = frame_mat.rows;
@@ -246,7 +253,7 @@ void camera_autoexposure(CameraState *s, float grey_frac) {}
 
 void cameras_open(MultiCameraState *s, VisionBuf *camera_bufs_rear,
                   VisionBuf *camera_bufs_focus, VisionBuf *camera_bufs_stats,
-                  VisionBuf *camera_bufs_front) {
+                  VisionBuf *camera_bufs_front, int idx1, int idx2) {
   assert(camera_bufs_rear);
   assert(camera_bufs_front);
   //int err;

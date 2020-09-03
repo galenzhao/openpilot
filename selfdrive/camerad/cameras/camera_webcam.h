@@ -36,6 +36,9 @@ typedef struct CameraState {
   float cur_gain_frac;
 
   mat3 transform;
+
+  // add webcam index
+  int idx;
 } CameraState;
 
 
@@ -47,7 +50,7 @@ typedef struct MultiCameraState {
 } MultiCameraState;
 
 void cameras_init(MultiCameraState *s);
-void cameras_open(MultiCameraState *s, VisionBuf *camera_bufs_rear, VisionBuf *camera_bufs_focus, VisionBuf *camera_bufs_stats, VisionBuf *camera_bufs_front);
+void cameras_open(MultiCameraState *s, VisionBuf *camera_bufs_rear, VisionBuf *camera_bufs_focus, VisionBuf *camera_bufs_stats, VisionBuf *camera_bufs_front, int idx1, int idx2);
 void cameras_run(MultiCameraState *s);
 void cameras_close(MultiCameraState *s);
 void camera_autoexposure(CameraState *s, float grey_frac);

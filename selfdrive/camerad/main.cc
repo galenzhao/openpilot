@@ -1596,6 +1596,16 @@ void party(VisionState *s) {
 }
 
 int main(int argc, char *argv[]) {
+  int rear_id = -1;
+  int front_id = -1;
+  printf("argc: %d\n", argc);
+  for (int i=0; i<argc; ++i){
+    printf("argv %d: %s\n", i, argv[i]);
+  }
+  if(argc == 3){
+    rear_id = argv[1][0]-'0';
+    front_id = argv[2][0]-'0';
+  }
   set_realtime_priority(51);
 
   zsys_handler_set(NULL);
@@ -1624,7 +1634,14 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifndef QCOM2
-  cameras_open(&s->cameras, &s->camera_bufs[0], &s->focus_bufs[0], &s->stats_bufs[0], &s->front_camera_bufs[0]);
+  #if defined(WEBCAM)
+    // replace camera index id
+    s->cameras.rear.idx = rear_id;
+    s->cameras.front.idx = front_id;
+    cameras_open(&s->cameras, &s->camera_bufs[0], &s->focus_bufs[0], &s->stats_bufs[0], &s->front_camera_bufs[0], -1, -1);
+  #else
+    cameras_open(&s->cameras, &s->camera_bufs[0], &s->focus_bufs[0], &s->stats_bufs[0], &s->front_camera_bufs[0]);
+  #endif
 #else
   cameras_open(&s->cameras, &s->camera_bufs[0], &s->focus_bufs[0], &s->stats_bufs[0], &s->front_camera_bufs[0], &s->wide_camera_bufs[0]);
 #endif
