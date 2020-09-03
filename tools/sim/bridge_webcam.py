@@ -23,7 +23,7 @@ args = parser.parse_args()
 pm = messaging.PubMaster(['frame', 'sensorEvents', 'can'])
 
 W, H = 1164, 874
-
+car_speed = 0
 
 def imu_callback(imu):
   #print(imu, imu.accelerometer)
@@ -32,13 +32,20 @@ def imu_callback(imu):
   dat.sensorEvents[0].sensor = 4
   dat.sensorEvents[0].type = 0x10
   dat.sensorEvents[0].init('acceleration')
-  dat.sensorEvents[0].acceleration.v = [imu.accelerometer.x, imu.accelerometer.y, imu.accelerometer.z]
+  dat.sensorEvents[0].acceleration.v = [random.random(), random.random(), random.random()]
   # copied these numbers from locationd
   dat.sensorEvents[1].sensor = 5
   dat.sensorEvents[1].type = 0x10
   dat.sensorEvents[1].init('gyroUncalibrated')
-  dat.sensorEvents[1].gyroUncalibrated.v = [imu.gyroscope.x, imu.gyroscope.y, imu.gyroscope.z]
+  dat.sensorEvents[1].gyroUncalibrated.v = [random.random(), random.random(), random.random()]
   pm.send('sensorEvents', dat)
+  print(imu)
+
+def update_car():
+  global car_speed
+  car_speed = car_speed + 1
+
+  #imu_callback(1)
 
 def health_function():
   pm = messaging.PubMaster(['health'])
@@ -95,6 +102,7 @@ def go(q):
 
   while 1:
     cruise_button = 0
+    update_car()
 
     # check for a input message, this will not block
     if not q.empty():
@@ -132,8 +140,9 @@ def go(q):
           is_openpilot_engaged = False
 
     #vel = vehicle.get_velocity()
-    speed = 60#math.sqrt(vel.x**2 + vel.y**2 + vel.z**2) * 3.6
-    can_function(pm, speed, fake_wheel.angle, rk.frame, cruise_button=cruise_button, is_engaged=is_openpilot_engaged)
+    speed = car_speed#math.sqrt(vel.x**2 + vel.y**2 + vel.z**2) * 3.6
+    #can_function(pm, speed, fake_wheel.angle, rk.frame, cruise_button=cruise_button, is_engaged=is_openpilot_engaged)
+    can_function(pm, speed, fake_wheel.angle, rk.frame, cruise_button=CruiseButtons.CANCEL, is_engaged=False)
 
     if rk.frame % 1 == 0:  # 20Hz?
       throttle_op, brake_op, steer_torque_op = sendcan_function(sendcan)
