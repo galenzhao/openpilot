@@ -1606,6 +1606,21 @@ int main(int argc, char *argv[]) {
     rear_id = argv[1][0]-'0';
     front_id = argv[2][0]-'0';
   }
+
+  std::string rear_file;
+  if(rear_id>=0&&rear_id<=9){
+  }else{
+    rear_id = -2;
+    // todo camera file path
+    rear_file = std::string(argv[1]);
+  }
+  std::string front_file;
+  if(front_id>=0&&front_id<=9){
+  }else{
+    front_id = -2;
+    front_file = std::string(argv[2]);
+  }
+
   set_realtime_priority(51);
 
   zsys_handler_set(NULL);
@@ -1638,6 +1653,9 @@ int main(int argc, char *argv[]) {
     // replace camera index id
     s->cameras.rear.idx = rear_id;
     s->cameras.front.idx = front_id;
+    s->cameras.rear.file = rear_file;
+    s->cameras.front.file = front_file;
+
     cameras_open(&s->cameras, &s->camera_bufs[0], &s->focus_bufs[0], &s->stats_bufs[0], &s->front_camera_bufs[0], -1, -1);
   #else
     cameras_open(&s->cameras, &s->camera_bufs[0], &s->focus_bufs[0], &s->stats_bufs[0], &s->front_camera_bufs[0]);

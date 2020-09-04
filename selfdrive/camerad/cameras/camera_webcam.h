@@ -2,6 +2,7 @@
 #define CAMERA_WEBCAM
 
 #include <stdbool.h>
+#include <string>
 
 #ifdef __APPLE__
 #include <OpenCL/cl.h>
@@ -39,6 +40,7 @@ typedef struct CameraState {
 
   // add webcam index
   int idx;
+  std::string file;
 } CameraState;
 
 
