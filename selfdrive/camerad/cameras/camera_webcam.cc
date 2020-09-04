@@ -5,6 +5,9 @@
 #include <signal.h>
 #include <pthread.h>
 
+#include <thread>
+#include <chrono>
+
 #include "common/util.h"
 #include "common/timing.h"
 #include "common/swaglog.h"
@@ -89,6 +92,10 @@ static void* rear_thread(void *arg) {
   TBuffer* tb = &s->camera_tb;
 
   while (!do_exit) {
+    if (!cap_rear.isOpened()) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000*60));
+    }
+
     cv::Mat frame_mat1;
     cv::Mat transformed_mat;
     // force resize to fit
@@ -175,6 +182,9 @@ void front_thread(CameraState *s) {
   TBuffer* tb = &s->camera_tb;
 
   while (!do_exit) {
+    if (!cap_front.isOpened()) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000*60));
+    }
     cv::Mat frame_mat1;
     cv::Mat transformed_mat;
 
