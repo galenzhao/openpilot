@@ -74,10 +74,12 @@ def thread_udp_recv(name):
     if "PID: 0d" == datas[0]:
       global speed_obd
       speed_obd = float(datas[2])
+      update_car()
 
     elif "PID: ff1001" == datas[0]:
       global speed_gps
       speed_gps = float(datas[2])
+      update_car()
 
     elif "TYPE_GYROSCOPE_UNCALIBRATED" == datas[0]:
       global gx
@@ -86,6 +88,7 @@ def thread_udp_recv(name):
       gy = datas[2]
       global gz
       gz = datas[3]
+      imu_callback(1)
 
     elif "TYPE_ACCELEROMETER" == datas[0]:
       global ax
@@ -94,6 +97,7 @@ def thread_udp_recv(name):
       ay = datas[2]
       global az
       az = datas[3]
+      imu_callback(1)
 
 def health_function():
   pm = messaging.PubMaster(['health'])
