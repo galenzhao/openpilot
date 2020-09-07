@@ -35,8 +35,8 @@ sock.bind((UDP_IP, UDP_PORT))
 
 ax, ay, az = 0, 0, 0
 gx, gy, gz = 0, 0, 0
-speed_obd = 0
-speed_gps = 0
+speed_obd = 0.01
+speed_gps = 0.01
 
 def imu_callback(imu):
   #print(imu, imu.accelerometer)
@@ -74,12 +74,18 @@ def thread_udp_recv(name):
     datas = data.split(",")
     if "PID: 0d" == datas[0]:
       global speed_obd
-      speed_obd = float(datas[2])
+      try:
+        speed_obd = float(datas[2])
+      except ValueError:
+        speed_obd = 0
       update_car()
 
     elif "PID: ff1001" == datas[0]:
       global speed_gps
-      speed_gps = float(datas[2])
+      try:
+        speed_gps = float(datas[2])
+      except ValueError:
+        speed_gps = 0
       update_car()
 
     elif "TYPE_GYROSCOPE_UNCALIBRATED" == datas[0]:
