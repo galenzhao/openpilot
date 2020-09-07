@@ -25,6 +25,18 @@ pm = messaging.PubMaster(['frame', 'sensorEvents', 'can'])
 W, H = 1164, 874
 car_speed = 0
 
+UDP_IP = "0.0.0.0"
+UDP_PORT = 2562
+
+sock = socket.socket(socket.AF_INET, # Internet
+                     socket.SOCK_DGRAM) # UDP
+sock.bind((UDP_IP, UDP_PORT))
+
+ax, ay, az = 0, 0, 0
+gx, gy, gz = 0, 0, 0
+speed_obd = 0
+speed_gps = 0
+
 def imu_callback(imu):
   #print(imu, imu.accelerometer)
 
@@ -32,20 +44,56 @@ def imu_callback(imu):
   dat.sensorEvents[0].sensor = 4
   dat.sensorEvents[0].type = 0x10
   dat.sensorEvents[0].init('acceleration')
-  dat.sensorEvents[0].acceleration.v = [random.random(), random.random(), random.random()]
+  dat.sensorEvents[0].acceleration.v = [ax,ay,az]
   # copied these numbers from locationd
   dat.sensorEvents[1].sensor = 5
   dat.sensorEvents[1].type = 0x10
   dat.sensorEvents[1].init('gyroUncalibrated')
-  dat.sensorEvents[1].gyroUncalibrated.v = [random.random(), random.random(), random.random()]
+  dat.sensorEvents[1].gyroUncalibrated.v = [gx,gy,gz]
   pm.send('sensorEvents', dat)
-  print(imu)
+  #print(imu)
 
 def update_car():
   global car_speed
-  car_speed = car_speed + 1
-
+  #car_speed = car_speed + 1
+  if speed_obd > 0:
+    car_speed = speed_obd
+  elif speed_gps > 0:
+    car_speed = speed_gps
+  else:
+    car_speed = 0
   #imu_callback(1)
+
+def thread_udp_recv(name):
+  while True:
+    data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+    #print("received message: %s" % data)
+    data = str(data, 'utf-8')
+    #print(data)
+    datas = data.split(",")
+    if "PID: 0d" == datas[0]:
+      global speed_obd
+      speed_obd = float(datas[2])
+
+    elif "PID: ff1001" == datas[0]:
+      global speed_gps
+      speed_gps = float(datas[2])
+
+    elif "TYPE_GYROSCOPE_UNCALIBRATED" == datas[0]:
+      global gx
+      gx = datas[1]
+      global gy
+      gy = datas[2]
+      global gz
+      gz = datas[3]
+
+    elif "TYPE_ACCELEROMETER" == datas[0]:
+      global ax
+      ax = datas[1]
+      global ay
+      ay = datas[2]
+      global az
+      az = datas[3]
 
 def health_function():
   pm = messaging.PubMaster(['health'])
@@ -102,7 +150,7 @@ def go(q):
 
   while 1:
     cruise_button = 0
-    update_car()
+    #update_car()
 
     # check for a input message, this will not block
     if not q.empty():
@@ -160,6 +208,9 @@ def go(q):
     rk.keep_time()
 
 if __name__ == "__main__":
+  x = threading.Thread(target=thread_udp_recv, args=(1,))
+  x.start()
+  
   params = Params()
   params.delete("Offroad_ConnectivityNeeded")
   from selfdrive.version import terms_version, training_version
