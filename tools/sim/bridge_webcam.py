@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # type: ignore
+import socket
 import time
 import math
 import atexit
@@ -83,20 +84,20 @@ def thread_udp_recv(name):
 
     elif "TYPE_GYROSCOPE_UNCALIBRATED" == datas[0]:
       global gx
-      gx = datas[1]
+      gx = float(datas[1])
       global gy
-      gy = datas[2]
+      gy = float(datas[2])
       global gz
-      gz = datas[3]
+      gz = float(datas[3])
       imu_callback(1)
 
     elif "TYPE_ACCELEROMETER" == datas[0]:
       global ax
-      ax = datas[1]
+      ax = float(datas[1])
       global ay
-      ay = datas[2]
+      ay = float(datas[2])
       global az
-      az = datas[3]
+      az = float(datas[3])
       imu_callback(1)
 
 def health_function():
