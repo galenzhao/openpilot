@@ -131,6 +131,8 @@ def fake_driver_monitoring():
     time.sleep(0.1)
 
 def go(q):
+  x = threading.Thread(target=thread_udp_recv, args=(1,))
+  x.start()
   threading.Thread(target=health_function).start()
   threading.Thread(target=fake_driver_monitoring).start()
 
@@ -219,8 +221,6 @@ def go(q):
     rk.keep_time()
 
 if __name__ == "__main__":
-  x = threading.Thread(target=thread_udp_recv, args=(1,))
-  x.start()
   
   params = Params()
   params.delete("Offroad_ConnectivityNeeded")
