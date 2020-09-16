@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+
 sudo apt-get update && sudo apt-get install -y \
     autoconf \
     build-essential \
@@ -43,6 +44,7 @@ sudo apt-get update && sudo apt-get install -y \
     python-dev \
     python-pip \
     qt5-default \
+    qtmultimedia5-dev \
     screen \
     sudo \
     vim \
@@ -102,7 +104,7 @@ pip install pysocks
 export http_proxy=socks5://127.0.0.1:1080 https_proxy=socks5://127.0.0.1:1080
 
 # install pipenv
-pip install pipenv==2018.11.26
+pip install pipenv==2020.8.13
 
 # upgrade pip for opencv-py
 pip install --upgrade pip
