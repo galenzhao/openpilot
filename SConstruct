@@ -23,6 +23,8 @@ if platform.system() == "Darwin":
   arch = "Darwin"
 if arch == "aarch64" and not os.path.isdir("/system"):
   arch = "larch64"
+if "4.9.140-tegra" == subprocess.check_output(["uname", "-r"], encoding='utf8').rstrip():
+  arch = "linuxarch64"
 
 webcam = bool(ARGUMENTS.get("use_webcam", 0))
 QCOM_REPLAY = arch == "aarch64" and os.getenv("QCOM_REPLAY") is not None
@@ -40,6 +42,7 @@ if arch == "aarch64" or arch == "larch64":
 
   cpppath = [
     "#phonelibs/opencl/include",
+    "/usr/include/"
   ]
 
   libpath = [
@@ -81,6 +84,7 @@ else:
   }
   cpppath = [
     "#external/tensorflow/include",
+    "/usr/local/opencv-4.4.0/include/opencv4"
   ]
 
   if arch == "Darwin":
@@ -95,13 +99,16 @@ else:
     cxxflags += ["-DGL_SILENCE_DEPRECATION"]
   else:
     libpath = [
-      "#phonelibs/snpe/x86_64-linux-clang",
-      "#phonelibs/libyuv/x64/lib",
+      "#phonelibs/snpe/larch64",
+      "#phonelibs/libyuv/larch64/lib",
+      #"#phonelibs/snpe/x86_64-linux-clang",
+      #"#phonelibs/libyuv/x64/lib",
       "#external/tensorflow/lib",
       "#cereal",
       "#selfdrive/common",
       "/usr/lib",
       "/usr/local/lib",
+      "/usr/local/opencv-4.4.0/lib"
     ]
 
   rpath = [
@@ -178,7 +185,7 @@ env = Environment(
 )
 
 qt_env = None
-if arch in ["x86_64", "Darwin", "larch64"]:
+if arch in ["linuxarch64", "x86_64", "Darwin", "larch64"]:
   qt_env = env.Clone()
 
   if arch == "Darwin":

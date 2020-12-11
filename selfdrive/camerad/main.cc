@@ -1254,9 +1254,12 @@ cl_program build_pool_program(VisionState *s,
   return CLU_LOAD_FROM_FILE(s->context, s->device_id, "imgproc/pool.cl", args);
 }
 
-void cl_init(VisionState *s) {
+void cl_init(VisionState *s, int type) {
   int err;
-  s->device_id = cl_get_device_id(CL_DEVICE_TYPE_DEFAULT);
+  cl_device_type device_type = CL_DEVICE_TYPE_DEFAULT;
+  if(type==1) device_type = CL_DEVICE_TYPE_CPU;
+  if(type==2) device_type = CL_DEVICE_TYPE_GPU;
+  s->device_id = cl_get_device_id(device_type);
   s->context = clCreateContext(NULL, 1, &s->device_id, NULL, NULL, &err);
   assert(err == 0);
 }
@@ -1592,13 +1595,18 @@ void party(VisionState *s) {
 int main(int argc, char *argv[]) {
   int rear_id = -1;
   int front_id = -1;
+  int cl_type = 0;
+
   printf("argc: %d\n", argc);
   for (int i=0; i<argc; ++i){
     printf("argv %d: %s\n", i, argv[i]);
   }
-  if(argc == 3){
+  if(argc >= 3){
     rear_id = argv[1][0]-'0';
     front_id = argv[2][0]-'0';
+  }
+  if(argc >= 4){
+	  cl_type = argv[3][0]-'0';
   }
 
   std::string rear_file;
@@ -1625,7 +1633,7 @@ int main(int argc, char *argv[]) {
   VisionState *s = &state;
 
   clu_init();
-  cl_init(s);
+  cl_init(s, cl_type);
 
   cameras_init(&s->cameras);
 

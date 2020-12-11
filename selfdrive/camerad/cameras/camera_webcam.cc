@@ -104,7 +104,11 @@ static void* rear_thread(void *arg) {
       continue;
     }
     cv::Mat frame_mat;
-    cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
+    if (frame_mat1.size().width != 853 || frame_mat1.size().height != 480) {
+      cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
+    }else{
+	    frame_mat = frame_mat1;
+    }
 
     // int rows = frame_mat.rows;
     // int cols = frame_mat.cols;
@@ -193,7 +197,11 @@ void front_thread(CameraState *s) {
     if(frame_mat1.size().empty()){
       continue;
     }
-    cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
+    if (frame_mat1.size().width != 853 || frame_mat1.size().height != 480) {
+      cv::resize(frame_mat1, frame_mat, cv::Size(853, 480));
+    }else{
+	    frame_mat = frame_mat1;
+    }
 
     // int rows = frame_mat.rows;
     // int cols = frame_mat.cols;

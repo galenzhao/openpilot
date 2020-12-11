@@ -59,6 +59,8 @@ cl_device_id cl_get_device_id(cl_device_type device_type) {
       continue;
     }
     // Get first device
+    //device_type = CL_DEVICE_TYPE_GPU;
+    // 
     err = clGetDeviceIDs(platform_ids[i], device_type, 1, &device_id, NULL);
     assert(err == 0);
     cl_print_info(platform_ids[i], device_id);
